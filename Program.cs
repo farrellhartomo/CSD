@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CSD
 {
@@ -6,7 +7,19 @@ namespace CSD
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+
+            // call dependency interfaces
+            IPerson person = ClassDependency.CRUDPerson();
+            IPersonData personData = ClassDependency.CRUDPersonData();
+
+
+            // initiate data
+            Console.WriteLine("Loading data!");
+
+
+            Console.WriteLine("Data has been loaded!");
+
+
         }
     }
 }
