@@ -3,8 +3,13 @@ Labwork UU - CSD
 
 Farrell
 
-## Instruction
+## Installation Instruction
 
 1. Clone the folder
-2. Open this Project Folder to Visual Studio code
+2. Open this Project Folder with Visual Studio code
 3. Build Project
+
+## Running the Program
+1. Wait until the program loaded
+2. Select one of the operation
+3. Select 0 to Exit
