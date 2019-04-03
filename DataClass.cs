@@ -133,7 +133,7 @@ namespace CSD
         }
     }
 
-    public class PersonalData : IPersonalData
+    public class PersonalData :  IPersonalData
     {
         private int PersonID;
         private Person person;
@@ -143,6 +143,14 @@ namespace CSD
         {
             person = new Person();
             address = new List<Address>();
+        }
+
+        public PersonalData(int i, Person p, Address a)
+        {
+            this.PersonID = i;
+            this.person = p;
+            address = new List<Address>();
+            this.address.Add(a);
         }
 
         public void SetPersonalData(int i, Person p, Address a)
@@ -207,15 +215,128 @@ namespace CSD
             return temp;
         }
 
-        public void Print()
+        public void Print() 
         {
-            ArrayList dataprint = GetPersonalData();
-            foreach(var i in dataprint)
+            Console.WriteLine("ID: {0}", PersonID);
+            Console.WriteLine("Name: {0}", person.PersonName);
+            Console.WriteLine("Birthday: {0}", person.BirthDay);
+            foreach (var i in address)
             {
-                Console.WriteLine(i);
+                i.PrintAddress();
             }
         }
+
+        public void PrintDataEntity()
+        {
+            ArrayList dataprint = GetPersonalData();
+            Console.Write("{ ");
+            for (int i = 0; i < (dataprint.Count); i++)
+            {
+                if (i < (dataprint.Count-1))
+                {
+                    object item = dataprint[i];
+                    Console.Write(item);
+                    Console.Write(", ");
+                } 
+                else
+                {
+                    object item = dataprint[i];
+                    Console.Write(item);
+                }
+
+            }
+            Console.Write(" }");
+            Console.WriteLine();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj);
+        }
     }
+
+    //public class PDCollections : ICollection<PersonalData>
+    //{
+    //    private List<PersonalData> PDColl;
+
+    //    public PDCollections()
+    //    {
+    //        PDColl = new List<PersonalData>();
+    //    }
+
+    //    public PersonalData this[int index]
+    //    {
+    //        return ;
+    //    }
+
+    //    public int Count => this.PDColl.Count;
+
+    //    public bool IsReadOnly => throw new NotImplementedException();
+
+    //    public void Add(PersonalData item)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void Clear()
+    //    {
+    //        PDColl;
+    //    }
+
+    //    public bool Contains(PersonalData item)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void CopyTo(PersonalData[] array, int arrayIndex)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public IEnumerator<PersonalData> GetEnumerator()
+    //    {
+    //        return new ;
+    //    }
+
+    //    public bool Remove(PersonalData item)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    IEnumerator IEnumerable.GetEnumerator()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    //public class PDCollEnum : IEnumerator<PersonalData>
+    //{
+    //    private PDCollections PDColl;
+    //    private int CurrentIndex;
+    //    private PersonalData CurrentPersonalData;
+
+    //    public PDCollEnum(PDCollections P)
+    //    {
+    //        PDColl = P;
+    //        CurrentIndex = -1;
+    //        CurrentPersonalData = default(PersonalData);
+    //    }
+
+    //    public PersonalData Current => this.Current;
+
+    //    public void Dispose(){  }
+
+    //    public bool MoveNext()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void Reset()
+    //    {
+    //        CurrentIndex = -1;
+    //    }
+    //}
+
 
     public interface IPersonalData
     {
@@ -225,7 +346,12 @@ namespace CSD
         ArrayList GetPersonalData();
         void Print();
         string[] GetAddress();
+        void PrintDataEntity();
     }
+
+
+
+
 
     class ClassDependency
     {
@@ -233,6 +359,7 @@ namespace CSD
         {
             return new PersonalData();
         }
+
     }
 }
 
