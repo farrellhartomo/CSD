@@ -147,8 +147,18 @@ namespace CSD
 
         public int ID
         {
-            get { return this.PersonID; }
-            set { this.PersonID = value; }
+            get { return PersonID; }
+            set { PersonID = value; }
+        }
+
+        public int GetID()
+        {
+            return this.PersonID;
+        }
+
+        public void SetID(int i)
+        {
+            this.PersonID = i;
         }
 
         public PersonalData(int i, Person p, Address a)
@@ -171,6 +181,12 @@ namespace CSD
             else return true;
         }
 
+        public void CreateDefaultPD()
+        {
+            person = new Person();
+            address = new List<Address>();
+        }
+
         public void SetPersonalData(int i, Person p, Address a)
         {
             this.PersonID = i;
@@ -181,6 +197,11 @@ namespace CSD
         public void SetPersonName(string fname, string lname)
         {
             this.person.UpdateName(fname, lname);
+        }
+
+        public void SetPersonBDay(string bday)
+        {
+            this.person.BirthDay = bday;
         }
 
         public void SetAddress(string street, string city, string state, string post)
@@ -271,6 +292,11 @@ namespace CSD
 
     public interface IPersonalData
     {
+        void SetPersonName(string fname, string lname);
+        void SetPersonBDay(string bday);
+        int GetID();
+        void SetID(int id);
+        void CreateDefaultPD();
         void SetPersonalData(int i, Person p, Address a);
         Person CreatePerson(string fname, string lname, string bday);
         Address CreateAddress(string street, string city, string state, string post);

@@ -42,6 +42,25 @@ namespace CSD
             return result;
         }
 
+        //public bool UpdatePersonData(int id,string fname,string lname,string bday)
+        //{
+        //    bool updateStat = false;
+        //    PersonalData temp = SearchByID(id); 
+        //    if (temp.)
+        //    {
+
+        //    }
+        //    return updateStat;
+        //}
+
+        public PersonalData SearchByID(int id)
+        {
+            PersonalData temp = PDColl.Find(delegate (PersonalData p) {
+                return p.GetID() == id;
+            });
+            return temp;
+        }
+
         public PersonalData SearchByName(string name)
         {
             PersonalData temp = PDColl.Find(delegate (PersonalData p) {
@@ -69,6 +88,8 @@ namespace CSD
 
     interface IPDColl
     {
+        PersonalData SearchByID(int id);
+        //bool UpdatePersonData(int id, string fname, string lname, string bday);
         void Add(PersonalData item);
         void Clear();
         int Count();
