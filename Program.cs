@@ -9,16 +9,15 @@ namespace CSD
         {
 
             // call dependency interfaces
-            IPerson person = ClassDependency.CRUDPerson();
-            IPersonData personData = ClassDependency.CRUDPersonData();
+            IPersonalData pd = ClassDependency.CRUDPersonData();
 
 
             // initiate data
             Console.WriteLine("Loading data!");
-
+            pd.SetPersonalData(1,pd.CreatePerson("Fx", "Yuhu", "20.03.1993"),pd.CreateAddress("Ab road", "mlm", "swe", "098"));
 
             Console.WriteLine("Data has been loaded!");
-
+            pd.Print();
 
         }
     }

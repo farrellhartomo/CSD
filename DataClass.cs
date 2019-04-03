@@ -1,22 +1,37 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace CSD
 {
 
-    public class Person : IPerson
+    public class Person 
     {
+        
         private string PersonFirstName { get; set; }
         private string PersonLastName { get; set; }
         private string Birthday { get; set; }
-        private List<Address> Address = new List<Address>();
+        //private List<Address> Address { get; set; }
 
-        public void SetPerson(string fname, string lname, string bday)
+        public Person(string fname, string lname, string bday)
         {
             this.PersonFirstName = fname;
             this.PersonLastName = lname;
             this.Birthday = bday;
+        }
+
+        public Person()
+        {
+            this.UpdateName(PersonFirstName, PersonLastName);
+            this.Birthday = BirthDay;
+        }
+
+        public void UpdateName(string fname, string lname)
+        { 
+            this.PersonFirstName = fname;
+            this.PersonLastName = lname;
         }
 
         public string PersonName
@@ -25,52 +40,50 @@ namespace CSD
             {
                 return PersonFirstName + PersonLastName;
             }
-            set
-            {
-                this.PersonFirstName = value;
-                this.PersonLastName = value;
-            }
         }
-
-
 
         public string BirthDay
         {
             get { return this.Birthday; }
             set { this.Birthday = value; }
         }
-        public void AddAddress(Address addr)
-        {
-            this.Address.Add(addr);
-        }
+
+        //public void SetAddress(Address a)
+        //{
+        //    this.Address.Add(a);
+        //}
 
         public void Print()
         {
             Console.WriteLine("Person name: {0} {1}", this.PersonFirstName, this.PersonLastName);
             Console.WriteLine("Birthday: {0}", this.Birthday);
-            object[] obj = this.Address.ToArray();
-            foreach (object value in obj)
-            {
-                Address item = (Address)value;
-                item.PrintAddress();
-            }
         }
     }
 
+    //Class Address
     public class Address
     {
-        private Person Person { get; set; }
+        private int AddressID; 
         private string Street { get; set; }
         private string City { get; set; }
         private string State { get; set; }
         private string PostNumber { get; set; }
 
-        public Address(Person p)
+        public Address(int aID,string street, string city, string state, string post) 
         {
-            this.Person = p;
+            this.AddressID = aID;
+            this.Street = street;
+            this.City = city;
+            this.State = state;
+            this.PostNumber = post;
         }
 
-        public void SetAddress(string street, string city, string state, string post)
+        public Address()
+        {
+            this.UpdateAddress(Street, City, State, PostNumber);
+        }
+
+        public void UpdateAddress(string street, string city, string state, string post)
         {
             this.Street = street;
             this.City = city;
@@ -93,99 +106,205 @@ namespace CSD
             Console.WriteLine("Personal Address : {0}, {1}, {2}", this.Street, this.City, this.State);
             Console.WriteLine("Zip/Postal Code: {0}", this.PostNumber);
         }
+
+
     }
 
     public class WorkAddress : Address
     {
         protected string OfficeName { get; set; }
 
-        public WorkAddress(Person p, string oname) : base(p)
+        public WorkAddress() { }
+
+        public WorkAddress(int aID, string street, string city, string state, string post,string oname): base ( aID,street, city, state, post)
+        {
+            SetOfficeName(oname);
+        }
+
+        public void SetOfficeName(string oname)
         {
             this.OfficeName = oname;
         }
 
-        public WorkAddress(Person p) : base(p) { }
+        public override void PrintAddress()
+        {
+            Console.WriteLine("Work Address : {0}", base.FullAddress());
+            Console.WriteLine("Zip/Postal Code: {0}", base.PostNum());
+        }
     }
 
-    interface IPerson
-    {
-        void SetPerson(string fname, string lname, string bday);
-        void AddAddress(Address addr);
-        void Print();
-        string PersonName { get; set; }
-        string BirthDay { get; set; }
-    }
-
-    public class PersonalData : IPersonData
+    public class PersonalData : IPersonalData
     {
         private int PersonID;
-        public Dictionary<int, Person> PersonData = new Dictionary<int, Person>();
-        Person person = new Person();
+        private Person person;
+        private List<Address> address;
 
-        private int SetID()
+        public PersonalData()
         {
-            Random rnd = new Random();
-            int numID = rnd.Next(100, 199);
-            return numID;
+            person = new Person();
+            address = new List<Address>();
         }
 
-        public void SetPersonalData(Person p)
+        public void SetPersonalData(int i, Person p, Address a)
         {
-            this.PersonID = SetID();
+            this.PersonID = i;
             this.person = p;
-            PersonData.Add(this.PersonID, this.person);
+            this.address.Add(a);
         }
 
-
-        public List<Person> GetPersonalData(int id)
+        public void SetPersonName(string fname, string lname)
         {
-            if (false)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            List<Person> tempPerson = new List<Person>();
-            string SearchID = id.ToString();
-            foreach(var item in PersonData)
-            {
-                if (item.Key.ToString().Contains(SearchID))
-                {
-                    tempPerson.Add(item.Value);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            return tempPerson;
+            this.person.UpdateName(fname, lname);
         }
 
-        public void PrintPersonalData()
+        public void SetAddress(string street, string city, string state, string post)
         {
-            foreach(var item in PersonData)
+            Address tempAddr = new Address();
+            tempAddr.UpdateAddress(street, city, state, post);
+            this.address.Add(tempAddr);
+        }
+
+        public Person CreatePerson(string fname, string lname, string bday)
+        {
+            Person temp = new Person();
+            temp.UpdateName(fname,lname);
+            temp.BirthDay = bday;
+            return temp;
+        }
+
+        public Address CreateAddress(string street, string city, string state, string post)
+        {
+            Address tempAddr = new Address();
+            tempAddr.UpdateAddress(street, city, state, post);
+            return tempAddr;
+        }
+
+        public string[] GetAddress()
+        {
+            string[] temp = new string[this.address.Count];
+            for (int i =0; i < address.Count;i++)
             {
-                Console.WriteLine("Full Name: {0}", item.Value.PersonName);
-                Console.WriteLine("Birthday: {0}",item.Value.BirthDay);
-                item.Value.Print();
+                temp[i] = this.address.ToArray()[i].FullAddress();
+            }
+            return temp;
+        }
+
+        public ArrayList GetPersonalData()
+        {
+            ArrayList temp = new ArrayList();
+
+            temp.Add(this.person.PersonName);
+            temp.Add(this.person.BirthDay);
+            if (address != null)
+            {
+                this.address.ForEach(delegate (Address a) 
+                {
+                    temp.Add(a.FullAddress());
+                    temp.Add(a.PostNum());
+                }) ;
+            }
+
+            return temp;
+        }
+
+        public void Print()
+        {
+            ArrayList dataprint = GetPersonalData();
+            foreach(var i in dataprint)
+            {
+                Console.WriteLine(i);
             }
         }
     }
 
-    interface IPersonData
+    public interface IPersonalData
     {
-        void SetPersonalData(Person p);
-        void PrintPersonalData();
+        void SetPersonalData(int i, Person p, Address a);
+        Person CreatePerson(string fname, string lname, string bday);
+        Address CreateAddress(string street, string city, string state, string post);
+        ArrayList GetPersonalData();
+        void Print();
+        string[] GetAddress();
     }
 
     class ClassDependency
     {
-        public static IPerson CRUDPerson()
-        {
-            return new Person();
-        }
-        public static IPersonData CRUDPersonData()
+        public static IPersonalData CRUDPersonData()
         {
             return new PersonalData();
         }
     }
 }
+
+//public class PersonalData : IPersonalData
+//{
+//    private Person person;
+//    private List<Address> address;
+
+//    public PersonalData()
+//    {
+//        person = new Person();
+//        address = new List<Address>();
+//    }
+
+//    public void SetPersonalData(Person p, Address a)
+//    {
+//        this.person = p;
+//        this.address.Add(a);
+//    }
+
+//public Person Person
+//{
+//    get
+//    {
+//        return person;
+//    }
+//}
+
+//    public void PutPerson(Person p)
+//    {
+//        this.person = p;
+//    }
+//}
+
+//public interface IPersonalData
+//{
+//    void SetPersonalData(Person p, Address a);
+//    void PutPerson();
+//}
+
+//public class PersonData : IPersonData
+//{
+//    Dictionary<int, PersonalData> personData = new Dictionary<int, PersonalData>();
+//    List<Address> addr = new List<Address>();
+//    private PersonalData pd;
+
+//    public void SetAllData()
+//    { 
+
+
+//    }
+
+//    public void PrintAll()
+//    {
+//        foreach (KeyValuePair<int, PersonalData> item in personData) 
+//        {
+//            Console.WriteLine("Key:{0} , Value: {1}", item.Key, item.Value.Person.PersonName);
+//        }
+//    }
+//}
+
+//pd.SetPersonalData(new Person("Fx", "Yuhu", "20.03.1993"), new Address("Ab road", "mlm", "swe", "098"));
+//personData.Add(1,pd);
+//pd.SetPersonalData(new Person("Cu", "Lala", "04.01.1994"), new Address("Ct road", "klk", "idr", "087"));
+//personData.Add(2,pd);
+//pd.SetPersonalData(new Person("Hu", "Heho", "06.02.1995"), new Address("jik vag", "ume", "swe", "111"));
+//personData.Add(3,pd);
+//public void SetAllData()
+//{
+//    this.SetPersonalData(new Person("Fx", "Yuhu", "20.03.1993"), new Address("Ab road", "mlm", "swe", "098"));
+//    this.SetPersonalData(new Person("Cu", "Lala", "04.01.1994"), new Address("Ct road", "klk", "idr", "087"));
+//    this.SetPersonalData(new Person("Hu", "Heho", "06.02.1995"), new Address("jik vag", "ume", "swe", "111"));
+//    this.SetPersonalData(new Person("Vi", "Ses", "07.04.1993"), new Address("gij rud", "kla", "pol", "564"));
+//    this.SetPersonalData(new Person("Hej", "San", "08.05.1993"), new Address("man jalan", "bdg", "idr", "654"));
+//}
