@@ -7,23 +7,35 @@ namespace CSD
 {
     public class PDCollections : IPDColl, IGenericOperation, IEnumerable<PersonalData>
     {
-        private List<PersonalData> PDColl;
+        private List<PersonalData> PDColl = new List<PersonalData>();
+        private IEnumerator<PersonalData> PDColEnum;
 
         public PDCollections()
         {
             PDColl = new List<PersonalData>();
+            PDColEnum = PDColl.GetEnumerator();
+        }
+
+        public void SetupCollection()
+        {
+            PDColl = new List<PersonalData>();
+            PDColEnum = PDColl.GetEnumerator();
+        }
+
+        public void SetEnum()
+        {
+            PDColEnum = PDColl.GetEnumerator();
         }
 
         //create by singular PDColl
         public void AddData(PersonalData p)
         {
-            PDColl.Add(p);
+            if (p != null)
+            {
+                PDColl.Add(p);
+            }
         }
 
-        public int Count()
-        {
-            return this.PDColl.Count; 
-        }
 
         public void Clear()
         {
@@ -32,17 +44,8 @@ namespace CSD
 
         public bool ContainsID(int id)
         {
-            bool state = false;
-
-            for (int i = 0; i < PDColl.Count;i++)
-            {
-                PersonalData temp = PDColl[i];
-                if (temp.PersonID ==id)
-                {
-                    state = true;
-                }
-            }
-            return state;
+            if (PDColEnum.Current.PersonID == id) return true; 
+            return false;
         }
 
         public bool UpdatePersonData(int id,string fname,string lname,string bday)
@@ -62,18 +65,18 @@ namespace CSD
         public bool UpdatePersonAddress(int person_id, string address_id, string street, string city, string state, string post)
         {
             bool updateStat = false;
-            var temp = PDColl.GetEnumerator();
 
-            while (updateStat == false)
+            while (updateStat == false && !PDColEnum.MoveNext())
             {
-                if (temp.Current.PersonID == person_id)
+                if (PDColEnum.Current.PersonID == person_id && address_id != null)
                 {
-                    temp.Current.GetAddressByID(address_id).UpdateAddress(street,city,state,post); 
+                    PDColEnum.Current.GetAddressByID(address_id).UpdateAddress(street,city,state,post); 
                     updateStat = true;
+                    PDColEnum.Reset();
                 }
                 else
                 {
-                    temp.MoveNext();
+                    PDColEnum.MoveNext();
                 }
             }
 
@@ -83,44 +86,68 @@ namespace CSD
 
         public PersonalData SearchByID(int id)
         {
-            PersonalData temp = PDColl.Find(delegate (PersonalData p) {
-                return p.PersonID == id;
-            });
-            return temp;
+            PDColEnum.Reset();
+            while (PDColEnum.MoveNext())
+            {
+                if (ContainsID(id))
+                {
+                    return PDColEnum.Current;
+                }
+                else
+                {
+                    PDColEnum.MoveNext();
+                }
+            }      
+            return null;
         }
 
         public PersonalData SearchByName(string name)
         {
-            PersonalData temp = PDColl.Find(delegate (PersonalData p) {
-                return p.person.PersonName == name;
-            });
-            return temp;
+            PDColEnum.Reset();
+            while (PDColEnum.MoveNext())
+            {
+                if (PDColEnum.Current.person.PersonName == name)
+                {
+                    return PDColEnum.Current;
+                }
+                else
+                {
+                    PDColEnum.MoveNext();
+                }
+            }
+            return null;
         }
 
         public bool RemoveByID(int id)
         {
-            bool temp = false;
+
             for (int i = 0; i < PDColl.Count; i++)
             {
-                PersonalData CurrentItem = PDColl[i];
-                if (PDColl[i].PersonID == id)
+                var item = this.PDColl[i];
+                if (item.PersonID == id)
                 {
                     PDColl.RemoveAt(i);
-                    break;
+                    return true;
                 }
-
             }
-            return temp;
+            return false;
+        }
+
+        public void PrintEach(string name)
+        {
+            //print each
+            PersonalData temp = SearchByName(name);
+            temp.Print();
         }
 
         public void Print()
         {
-            //print each 
-        }
-
-        public void PrintAll()
-        {
             //print all
+            PDColEnum.Reset();
+            while (PDColEnum.MoveNext())
+            {
+                PDColEnum.Current.Print();
+            }
         }
 
         public IEnumerator<PersonalData> GetEnumerator()
@@ -130,7 +157,7 @@ namespace CSD
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return (IEnumerator) GetEnumerator();
         }
     }
 
@@ -184,13 +211,17 @@ namespace CSD
 
     interface IPDColl
     {
+        void SetEnum();
+        void SetupCollection();
         void AddData(PersonalData item);
-        int Count();
         void Clear();
         bool ContainsID(int id);
-        PersonalData SearchByID(int id);
+        bool UpdatePersonAddress(int person_id, string address_id, string street, string city, string state, string post);
         bool UpdatePersonData(int id, string fname, string lname, string bday);
+        PersonalData SearchByID(int id);
         PersonalData SearchByName(string name);
         bool RemoveByID(int id);
+        void PrintEach(string name);
+        void Print();
     }
 }

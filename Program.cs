@@ -9,9 +9,20 @@ namespace CSD
         {
             IPDColl _PDColl =  ClassDependency.PDColl();
             PersonalData _PersonalData = new PersonalData();
+            Person _person = new Person();
+            Address _address = new Address();
+            WorkAddress _workAddress = new WorkAddress();
 
-            
+            Console.WriteLine("Loading data!");
+            _PersonalData = new PersonalData(1,"Fx", "Yuhu", "20.03.1993", "Ab road", "mlm", "swe", "098"); _PDColl.AddData(_PersonalData);
+            _PersonalData = new PersonalData(2, "CU", "lala", "10.04.1994", "cd road", "upp", "ops", "012"); _PDColl.AddData(_PersonalData);
+            _PersonalData = new PersonalData(3, "Fx", "Yohi", "13.05.1992", "fg road", "sto", "idr", "056"); _PDColl.AddData(_PersonalData);
+            _PersonalData = new PersonalData(4, "Fpp", "Yawhu", "22.06.1991", "hi road", "spt", "fkr", "021"); _PDColl.AddData(_PersonalData);
 
+            _PDColl.SetEnum();
+            _PDColl.Print();
+
+            _PDColl.SearchByID(3).Print();
 
             //// call dependency interfaces
             //IPersonalData PD = ClassDependency.CRUDPersonData();
