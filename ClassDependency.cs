@@ -8,15 +8,37 @@ namespace CSD
         {
             return new PDCollections();
         }
-
-        public static List<IPersonalData> CRUDPersonDataList()
-        {
-            return new List<IPersonalData>();
-        }
-        public static IPersonalData CRUDPersonData()
-        {
-            return new PersonalData();
-        }
-
     }
+
+    interface IGenericOperation
+    {
+        void Print();
+    }
+
+    interface Printing
+    {
+        void PrintInJson();
+    }
+
+    //public void PrintDataEntityInJson()
+    //{
+    //    Console.Write("{ ");
+    //    for (int i = 0; i < this.Count; i++)
+    //    {
+    //        if (i < (dataprint.Count - 1))
+    //        {
+    //            object item = dataprint[i];
+    //            Console.Write(item);
+    //            Console.Write(", ");
+    //        }
+    //        else
+    //        {
+    //            object item = dataprint[i];
+    //            Console.Write(item);
+    //        }
+
+    //    }
+    //    Console.Write(" }");
+    //    Console.WriteLine();
+    //}
 }
