@@ -3,7 +3,7 @@
 namespace CSD
 {
     //Class Address
-    public class Address : IGenericOperation
+    public class Address
     {
         public string AddressID { get; set; }
         public string Street { get; set; }
@@ -44,11 +44,7 @@ namespace CSD
             return this.PostNumber;
         }
 
-        public virtual void Print()
-        {
-            Console.WriteLine("Personal Address : {0}, {1}, {2}", this.Street, this.City, this.State);
-            Console.WriteLine("Zip/Postal Code: {0}", this.PostNumber);
-        }
+
     }
 }
 

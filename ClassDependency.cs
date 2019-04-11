@@ -8,16 +8,24 @@ namespace CSD
         {
             return new PDCollections();
         }
+        public static IPrinting Print()
+        {
+            return new Print();
+        }
     }
 
     interface IGenericOperation
     {
-        void Print();
+
     }
 
-    interface Printing
+    interface IPrinting
     {
-        void PrintInJson();
+        void PrintCollection(List<PersonalData> p);
+        void PrintAddress(Address a);
+        void PrintPerson(Person pd);
+        void PrintPersonalData(PersonalData pd);
+        //void PrintInJson();
     }
 
     //public void PrintDataEntityInJson()

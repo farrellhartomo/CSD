@@ -12,12 +12,6 @@ namespace CSD
         {
             OfficeName = oname;
         }
-
-        public override void Print()
-        {
-            Console.WriteLine("Work Address : {0}", base.FullAddress());
-            Console.WriteLine("Zip/Postal Code: {0}", base.PostNum());
-        }
     }
 }
 

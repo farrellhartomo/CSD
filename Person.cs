@@ -2,7 +2,7 @@
 
 namespace CSD
 {
-    public class Person : IGenericOperation
+    public class Person 
     {
 
         public string PersonFirstName { get; set; }
@@ -18,7 +18,6 @@ namespace CSD
 
         public Person()
         {
-
 
         }
 
@@ -44,10 +43,11 @@ namespace CSD
             }
         }
 
-        public string BirthDay
+        public void UpdatePerson(string fname, string lname, string bday)
         {
-            get { return this.Birthday; }
-            set { this.Birthday = value; }
+            this.PersonFirstName = fname;
+            this.PersonLastName = lname;
+            this.Birthday = bday;
         }
 
         public void Print()

@@ -9,17 +9,14 @@ namespace CSD
 
     public class PersonalData : IGenericOperation
     {
-        public int PersonID { set; get; }
+        public int PersonID;
         public Person person;
         public List<Address> addressList;
 
         public PersonalData()
         {
-            person = new Person();
-            addressList = new List<Address>();
+
         }
-
-
 
         public PersonalData(int i, Person p, Address a)
         {
@@ -50,19 +47,6 @@ namespace CSD
             }
             return temp;
         }
-
-        public void Print()
-        {
-            Console.WriteLine("ID: {0}", PersonID);
-            Console.WriteLine("Name: {0}", person.PersonName);
-            Console.WriteLine("Birthday: {0}", person.BirthDay);
-            foreach (var i in addressList)
-            {
-                i.Print();
-            }
-        }
-
-
     }
 
     public interface IPersonalData

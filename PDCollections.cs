@@ -5,7 +5,7 @@ using System.Diagnostics.Contracts;
 
 namespace CSD
 {
-    public class PDCollections : IPDColl, IGenericOperation, IEnumerable<PersonalData>
+    public class PDCollections : IPDColl, IEnumerable<PersonalData>
     {
         private List<PersonalData> PDColl = new List<PersonalData>();
         private IEnumerator<PersonalData> PDColEnum;
@@ -30,10 +30,15 @@ namespace CSD
         //create by singular PDColl
         public void AddData(PersonalData p)
         {
-            if (p != null)
+            if (p != null && !IsExist(this.PDColl,p))
             {
                 PDColl.Add(p);
             }
+        }
+
+        public List<PersonalData> GetPDCollection()
+        {
+            return this.PDColl;
         }
 
 
@@ -44,44 +49,20 @@ namespace CSD
 
         public bool ContainsID(int id)
         {
-            if (PDColEnum.Current.PersonID == id) return true; 
+            return (PDColEnum.Current.PersonID == id);
+        }
+
+
+        private bool IsExist(List<PersonalData> pl,PersonalData pnew)
+        {
+
+            foreach(var p in pl)
+            {
+                if (p.PersonID == pnew.PersonID) {
+                    return true;
+                }
+            }
             return false;
-        }
-
-        public bool UpdatePersonData(int id,string fname,string lname,string bday)
-        {
-            bool updateStat = false;
-            PersonalData temp = SearchByID(id); 
-            if (ContainsID(id))
-            {
-                temp.person.PersonFirstName = fname;
-                temp.person.PersonLastName = lname;
-                temp.person.Birthday = bday;
-                updateStat = true;
-            }
-            return updateStat;
-        }
-
-        public bool UpdatePersonAddress(int person_id, string address_id, string street, string city, string state, string post)
-        {
-            bool updateStat = false;
-
-            while (updateStat == false && !PDColEnum.MoveNext())
-            {
-                if (PDColEnum.Current.PersonID == person_id && address_id != null)
-                {
-                    PDColEnum.Current.GetAddressByID(address_id).UpdateAddress(street,city,state,post); 
-                    updateStat = true;
-                    PDColEnum.Reset();
-                }
-                else
-                {
-                    PDColEnum.MoveNext();
-                }
-            }
-
-
-            return updateStat;
         }
 
         public PersonalData SearchByID(int id)
@@ -93,26 +74,19 @@ namespace CSD
                 {
                     return PDColEnum.Current;
                 }
-                else
-                {
-                    PDColEnum.MoveNext();
-                }
-            }      
+            }
             return null;
         }
 
         public PersonalData SearchByName(string name)
         {
+
             PDColEnum.Reset();
             while (PDColEnum.MoveNext())
             {
                 if (PDColEnum.Current.person.PersonName == name)
                 {
                     return PDColEnum.Current;
-                }
-                else
-                {
-                    PDColEnum.MoveNext();
                 }
             }
             return null;
@@ -131,23 +105,6 @@ namespace CSD
                 }
             }
             return false;
-        }
-
-        public void PrintEach(string name)
-        {
-            //print each
-            PersonalData temp = SearchByName(name);
-            temp.Print();
-        }
-
-        public void Print()
-        {
-            //print all
-            PDColEnum.Reset();
-            while (PDColEnum.MoveNext())
-            {
-                PDColEnum.Current.Print();
-            }
         }
 
         public IEnumerator<PersonalData> GetEnumerator()
@@ -208,20 +165,16 @@ namespace CSD
         }
     }
 
-
     interface IPDColl
     {
         void SetEnum();
         void SetupCollection();
         void AddData(PersonalData item);
+        List<PersonalData> GetPDCollection();
         void Clear();
         bool ContainsID(int id);
-        bool UpdatePersonAddress(int person_id, string address_id, string street, string city, string state, string post);
-        bool UpdatePersonData(int id, string fname, string lname, string bday);
         PersonalData SearchByID(int id);
         PersonalData SearchByName(string name);
         bool RemoveByID(int id);
-        void PrintEach(string name);
-        void Print();
     }
 }
