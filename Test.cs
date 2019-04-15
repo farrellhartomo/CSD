@@ -38,7 +38,7 @@ namespace CSD_Testing
         [TestCase()]
         public void PersonReturnNullException()
         {
-
+            Assert.Throws<ArgumentNullException>(()=> new Person(null,null,null));
         }
     }
 
@@ -57,6 +57,8 @@ namespace CSD_Testing
             Assert.AreEqual("Swe",_address.State);
             Assert.AreEqual("75626",_address.PostNumber);
         }
+
+        [TestCase()]
         public void TestUpdateAddress()
         {
             _address = new Address("Home", "SV", "Upp", "Swe", "75626");
@@ -67,5 +69,43 @@ namespace CSD_Testing
             Assert.AreEqual("76767", _address.PostNumber);
         }
 
+        [TestCase()]
+        public void TestAddressUpdateNull()
+        {
+            _address = new Address("Home", "SV", "Upp", "Swe", "75626");
+            Assert.False(_address.UpdateAddress(null, null, null, null),"fail update");
+        }
     }
+
+    [TestFixture()]
+    public class TestPersonalData
+    {
+        public PersonalData _PersonData = new PersonalData();
+
+        [TestCase()]
+        public void TestCreatePD()
+        {
+            var person = new Person("haha", "hihi", "20.09.2019");
+            var addr = new Address("Home", "SV", "Upp", "Swe", "75626");
+
+            _PersonData = new PersonalData(1, person, addr);
+
+            Assert.AreEqual("haha", _PersonData.person.PersonFirstName);
+            Assert.AreEqual("hihi", _PersonData.person.PersonLastName);
+            Assert.AreEqual("20.09.2019", _PersonData.person.Birthday);
+            Assert.AreEqual("Home", _PersonData.GetAddressByID("Home").AddressID);
+            Assert.AreEqual("SV", _PersonData.GetAddressByID("Home").Street);
+            Assert.AreEqual("Upp", _PersonData.GetAddressByID("Home").City);
+            Assert.AreEqual("Swe", _PersonData.GetAddressByID("Home").State);
+            Assert.AreEqual("75626", _PersonData.GetAddressByID("Home").PostNumber);
+        }
+
+        [TestCase()]
+        public void TestGetPersonPD()
+        {
+
+        }
+
+    }
+
 }
