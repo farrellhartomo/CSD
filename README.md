@@ -13,3 +13,8 @@ Farrell
 1. Wait until the program loaded
 2. Select one of the operation
 3. Select 0 to Exit
+
+## Testing the Program
+1. Export the file to the Visual Studio Code
+2. Open View > Test
+3. Click button "Run All" on the **Unit Tests** Tab
