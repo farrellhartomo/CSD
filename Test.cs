@@ -127,6 +127,7 @@ namespace CSD_Testing
         {
             _PersonData = new PersonalData(1, "haha", "hihi", "20.09.2019", "SV", "Upp", "Swe", "75626");
             _PD.AddData(_PersonData);
+            _PD.SetEnum();
 
             Assert.AreEqual(_PersonData,_PD.SearchByID(1));
         }
