@@ -6,7 +6,7 @@ namespace CSD_Testing
     [TestFixture()]
     public class TestPerson
     {
-        public Person _Person = new Person();
+        Person _Person = new Person();
 
         [TestCase()] //TestPerson
         public void TestPersonCreated()
@@ -45,7 +45,7 @@ namespace CSD_Testing
     [TestFixture()]
     public class TestAddress
     {
-        public Address _address = new Address();
+        Address _address = new Address();
 
         [TestCase()]
         public void TestCreateAddress()
@@ -101,11 +101,49 @@ namespace CSD_Testing
         }
 
         [TestCase()]
-        public void TestGetPersonPD()
+        public void TestGetPersonPDbyID()
         {
+            _PersonData = new PersonalData(1, "haha", "hihi", "20.09.2019", "SV", "Upp", "Swe", "75626");
 
+            Assert.AreEqual("SV", _PersonData.GetAddressByID("home").Street);
+        }
+
+        [TestCase()]
+        public void TestNullAddress()
+        {
+            Assert.Throws<ArgumentNullException>(()=> new PersonalData(1, null, null, null, null, null, null, null));
         }
 
     }
 
+    [TestFixture()]
+    public class TestPDColl
+    {
+        PDCollections _PD = new PDCollections();
+        PersonalData _PersonData = new PersonalData();
+
+        [TestCase()]
+        public void CreatePDColl()
+        {
+            _PersonData = new PersonalData(1, "haha", "hihi", "20.09.2019", "SV", "Upp", "Swe", "75626");
+            _PD.AddData(_PersonData);
+
+            Assert.AreEqual(_PersonData,_PD.SearchByID(1));
+        }
+
+        [TestCase()]
+        public void TestNullPDColl()
+        {
+            Assert.Throws<ArgumentNullException>(() => _PD.AddData(null));
+        }
+
+        [TestCase()]
+        public void TestCollectionCreated()
+        {
+            _PersonData = new PersonalData(1, "haha", "hihi", "20.09.2019", "SV", "Upp", "Swe", "75626");
+            _PD.AddData(_PersonData);
+
+            Assert.IsNotNull(_PD.GetPDCollection());
+        }
+    }
 }
